@@ -1,0 +1,10 @@
+{
+  "parent.labels.greeting": "Greeting",
+  "parent.labels.farwell": "Farwell",
+  "parent.labels.parentComponent": "ENGLISH Parent Component",
+  "parent.labels.welcome": "Welcome !",
+
+  "parent.buttons.parent": "ENGLISH Parent",
+  
+  "parent.messages.greeting_message": "ENGLISH {name} message!!"
+}

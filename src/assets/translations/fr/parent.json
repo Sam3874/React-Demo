@@ -1,0 +1,10 @@
+{
+  "parent.labels.greeting": "Bonjour",
+  "parent.labels.farwell": "Au revoir",
+  "parent.labels.parentComponent": "FRENCH Parent Component",
+  "parent.labels.welcome": "Bienvenue !",
+
+  "parent.buttons.parent": "FRENCH Parent",
+  
+  "parent.messages.greeting_message": "Salut {name}, ça va ?"
+}

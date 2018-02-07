@@ -1,0 +1,56 @@
+{
+  "name": "material-ui-example-webpack",
+  "version": "0.16.4",
+  "description": "Sample project that uses Material-UI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/callemall/material-ui.git"
+  },
+  "engines": {
+    "node": ">=8.9.x"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --config webpack-dev.config.js --progress --inline --colors",
+    "build": "webpack --config webpack-dev.config.js --progress --colors"
+  },
+  "private": true,
+  "dependencies": {
+    "ag-grid": "^14.1.1",
+    "ag-grid-enterprise": "^14.1.1",
+    "ag-grid-react": "^14.0.0",
+    "immutable": "^4.0.0-rc.9",
+    "material-ui": "next",
+    "material-ui-icons": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-dom-factories": "^1.0.2",
+    "react-intl": "^2.4.0",
+    "react-localize-redux": "^2.13.6",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-tap-event-plugin": "^2.0.1",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "hapi": "^17.x.x",
+    "boom": "^7.x.x",
+    "bounce": "^1.x.x",
+    "hoek": "^5.x.x",
+    "joi": "^13.x.x"
+  },
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "css-loader": "^0.28.7",
+    "html-webpack-plugin": "^2.24.1",
+    "style-loader": "^0.19.0",
+    "transfer-webpack-plugin": "^0.1.4",
+    "webpack": "^2.4.1",
+    "webpack-dev-server": "^2.4.2",
+    "browser-sync": "^2.10.1",
+    "browser-sync-webpack-plugin": "^1.0.1"
+  }
+}
