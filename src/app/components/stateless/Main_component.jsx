@@ -1,9 +1,9 @@
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Button from 'material-ui/Button';
-import Toolbar from 'material-ui/Toolbar';
-import TextField from 'material-ui/TextField';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
+import TextField from '@material-ui/core/TextField';
 import appStyles from '../common/styles';
 
 //const styles = appStyles;
@@ -64,7 +64,7 @@ export class ParentComponent extends React.Component {
               defaultValue={this.props.app_data[2].data}
               margin="normal"
               />
-            <Button variant="raised" color="primary"
+            <Button variant="contained" color="primary"
               onClick={() => this.handleClick()} > Update data </Button>
             <br />
             <div><h3> otherValue : {this.props.app_otherValue.otherValue}</h3></div>
@@ -75,7 +75,7 @@ export class ParentComponent extends React.Component {
               value={this.props.app_otherValue.otherValue}
               margin="normal"
               />
-            <Button variant="raised" color="primary"
+            <Button variant="contained" color="primary"
               onClick={() => this.props.app_update_OtherValue_Creater(
                 newOtherValue
               )}

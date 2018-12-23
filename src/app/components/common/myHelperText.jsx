@@ -1,5 +1,5 @@
 import React from "react";
-import { FormHelperText } from 'material-ui/Form';
+import { FormHelperText } from '@material-ui/core/Form';
 
 const MyHelperText = (props) => (       
     props.map( message => 

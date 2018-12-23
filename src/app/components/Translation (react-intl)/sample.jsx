@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Toolbar from 'material-ui/Toolbar';
-import Paper from 'material-ui/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
+import Paper from '@material-ui/core/Paper';
 import appStyles from '../common/styles';
-import Divider from 'material-ui/Divider';
-import Typography from 'material-ui/Typography';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 import { FormattedMessage, addLocaleData, IntlProvider } from 'react-intl';  //for translation..
 
 //const styles = appStyles;
@@ -90,21 +90,21 @@ class sample extends React.Component {
                     <Paper className={classes.root} elevation={4}>
                         <center><u>Current Language</u>: <b>{this.state.language}</b></center>
                         <br />
-                        Change Language To - <Button variant="raised" color="primary" onClick={() => this.setLanguage("en")} className={classes.button} >
+                        Change Language To - <Button variant="contained" color="primary" onClick={() => this.setLanguage("en")} className={classes.button} >
                             English
                 </Button>
-                        <Button variant="raised" color="primary" onClick={() => this.setLanguage("fr")} className={classes.button} >
+                        <Button variant="contained" color="primary" onClick={() => this.setLanguage("fr")} className={classes.button} >
                             French
                 </Button>
                         <br />
                         <Divider />
                         <h4><FormattedMessage id="parent.labels.parentComponent" /></h4>
                         <div> State : {this.state.value}</div>
-                        <Button variant="raised" color="primary"
+                        <Button variant="contained" color="primary"
                             onClick={() => this.updateName('parent.messages.greeting_message', 'PARENT')}>
                             <FormattedMessage id="parent.buttons.parent" />
                         </Button> 
-                        <Button variant="raised" color="primary">
+                        <Button variant="contained" color="primary">
                             <FormattedMessage id="common.buttons.submit" />
                         </Button>
                         <br /> 
@@ -135,7 +135,7 @@ class Child extends React.Component {
                     >
                     <FormattedMessage id="child.buttons.child" />
                 </Button>
-                <Button variant="raised" color="primary">
+                <Button variant="contained" color="primary">
                     <FormattedMessage id="common.buttons.submit" />
                 </Button>
             </div>
@@ -165,7 +165,7 @@ const SampleComponent = props => {
                 values={{ name: 'AJIT' }}>
                 {(message) => <input type="text" placeholder={message} />}
             </FormattedMessage>
-            <Button variant="raised" color="primary">
+            <Button variant="contained" color="primary">
                 <FormattedMessage id="common.buttons.submit" />
             </Button>
         </div>

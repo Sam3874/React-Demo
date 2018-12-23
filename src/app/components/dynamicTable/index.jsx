@@ -1,30 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 //import { withRouter } from 'react-router-dom'
-import { withStyles } from 'material-ui/styles';
-import Grid from 'material-ui/Grid';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-import Paper from 'material-ui/Paper';
-import TextField from 'material-ui/TextField';
-import Input, { InputLabel } from 'material-ui/Input';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import Switch from 'material-ui/Switch';
-import Button from 'material-ui/Button';
-import Icon from 'material-ui/Icon';
-import IconButton from 'material-ui/IconButton';
-import { Add, Remove, Menu } from 'material-ui-icons';
-import Snackbar from 'material-ui/Snackbar';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Switch from '@material-ui/core/Switch';
+import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import Add from '@material-ui/icons/Add';
+import Remove from '@material-ui/icons/Remove';
+import Menu from '@material-ui/icons/Menu';
+import Snackbar from '@material-ui/core/Snackbar';
+
 import appStyles from '../common/styles';
 import MySnackBarMessage from '../common/MySnackBarMessage';
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 import MyDialog from './dialog';
+
 
 const styles = appStyles;
 
 class DynamicTable extends React.Component {
     constructor(props, context) {
         super(props, context);
-                 
+
         this.state = {
             tableData: this.rows,
             snackBarConfig: {
@@ -83,18 +94,18 @@ class DynamicTable extends React.Component {
 
     handleSwitch(id, key, targetElement, value) {
         let newState = JSON.parse(JSON.stringify(this.state));
-        newState.tableData[id-1].justification = "";
-        this.setState({tableData: newState.tableData.slice()});
+        newState.tableData[id - 1].justification = "";
+        this.setState({ tableData: newState.tableData.slice() });
         this.handleChange(id, key, targetElement, value);
     }
 
-    handleChange(id, key, targetElement, value) {  
+    handleChange(id, key, targetElement, value) {
         this.updateState(id, key, value);
-        this.validateField(id-1, key, targetElement, value);
+        this.validateField(id - 1, key, targetElement, value);
     }
 
     handleRequestClose(event, reason) {
-        this.setState({ snackBarConfig: { open: false, message: "" }});
+        this.setState({ snackBarConfig: { open: false, message: "" } });
     }
 
     handleClickDialogOpen(index) {
@@ -104,7 +115,7 @@ class DynamicTable extends React.Component {
     }
 
     showSnackBarMessage(msg) {
-         this.setState({snackBarConfig: { open: true, message: msg }});
+        this.setState({ snackBarConfig: { open: true, message: msg } });
     }
 
     handleRequestDialogClose(action, index, comments = "") {
@@ -128,7 +139,7 @@ class DynamicTable extends React.Component {
             row.id = i;
             row.required = !flag;
             rows.push(row);
-            this.validationFields.push({[this.cols[1].key]:"", [this.cols[3].key]: ""});
+            this.validationFields.push({ [this.cols[1].key]: "", [this.cols[3].key]: "" });
             flag = !flag;
         }
         return rows;
@@ -143,9 +154,9 @@ class DynamicTable extends React.Component {
                     this.tempItem.id = this.rows.length + 1;
                     this.rows.push(this.tempItem);
                     this.setState({ tableData: this.rows });
-                    this.state.validationFields.push({[this.cols[1].key]:"", [this.cols[3].key]: ""});
+                    this.state.validationFields.push({ [this.cols[1].key]: "", [this.cols[3].key]: "" });
                 } else {  //trigger snackbar open
-                    this.setState({snackBarConfig: { open: true, message: "You have reached to maximum rows" } });
+                    this.setState({ snackBarConfig: { open: true, message: "You have reached to maximum rows" } });
                 }
                 break;
 
@@ -155,7 +166,7 @@ class DynamicTable extends React.Component {
                     this.setState({ tableData: this.rows });
                     this.state.validationFields.pop();
                 } else {  //trigger snackbar open
-                    this.setState({snackBarConfig: { open: true, message: "You have reached to minimum rows" } });
+                    this.setState({ snackBarConfig: { open: true, message: "You have reached to minimum rows" } });
                 }
                 break;
 
@@ -174,7 +185,7 @@ class DynamicTable extends React.Component {
     }
 
     // form validations
-     handleSubmit(e) {       
+    handleSubmit(e) {
         e.preventDefault();    //stop submitting form as of now..
         if (!this.validateForm()) {
             console.log('form is invalid');
@@ -182,62 +193,62 @@ class DynamicTable extends React.Component {
         } else {
             console.log('form is valid');
             this.showSnackBarMessage("form is valid");
-        }       
-    }
-  
-   validateForm() {
-    //const inputs = document.querySelectorAll('input, textarea');
-    //console.log("inputs", inputs);
-    let isFormValid = true;
-    let errorText = "";
-
-    this.state.tableData.map((row, index) => {
-            //Quantity validation
-            let targetElement = document.querySelector("input#quantity"+row.id);           
-            errorText += this.validateField(index, 'quantity', targetElement, targetElement.value);
-            
-            //Justification validation
-            targetElement = document.querySelector("textarea#justification"+row.id);           
-            errorText += this.validateField(index, 'justification', targetElement, targetElement.value);
-    });
-    isFormValid = errorText !== ""? false: true;
-    return isFormValid;
-   }
-   
-  
-  validateField(index, key, targetElement, value) {
-    let errorText = "";
-    const validity = targetElement.validity;    //this.refs[refName].validity;  
-    //console.log("validationMessage", targetElement.validationMessage);
-    //console.log("rangeOverflow", validity.rangeOverflow);
-    //console.log("tooLong", validity.tooLong); 
-    //console.log("patternMismatch", validity.patternMismatch); 
-      
-    if (!validity.valid) {
-      //required
-      if (validity.valueMissing) {
-            errorText = "This is a required field"; 
-      } else {
-            errorText = "Content of this field is not valid";
-        }     
-      //validity.rangeUnderflow - Not supported
-      //validity.rangeOverflow - Not supported     
-      //validity.tooLong - Not supported
-      //validity.patternMismatch - Not supported
-    }
-    //additional validations if any
-    if (errorText === "") {
-        if (key === "justification") {
-            if(value.length > 20) {
-                 errorText = "Content of this field exceeded the allowed maximum charaters";
-            }
         }
     }
-    let validationFields = this.state.validationFields.slice();
-    validationFields[index][key] = errorText; 
-    this.setState({validationFields});
-    return errorText;
-  }
+
+    validateForm() {
+        //const inputs = document.querySelectorAll('input, textarea');
+        //console.log("inputs", inputs);
+        let isFormValid = true;
+        let errorText = "";
+
+        this.state.tableData.map((row, index) => {
+            //Quantity validation
+            let targetElement = document.querySelector("input#quantity" + row.id);
+            errorText += this.validateField(index, 'quantity', targetElement, targetElement.value);
+
+            //Justification validation
+            targetElement = document.querySelector("textarea#justification" + row.id);
+            errorText += this.validateField(index, 'justification', targetElement, targetElement.value);
+        });
+        isFormValid = errorText !== "" ? false : true;
+        return isFormValid;
+    }
+
+
+    validateField(index, key, targetElement, value) {
+        let errorText = "";
+        const validity = targetElement.validity;    //this.refs[refName].validity;  
+        //console.log("validationMessage", targetElement.validationMessage);
+        //console.log("rangeOverflow", validity.rangeOverflow);
+        //console.log("tooLong", validity.tooLong); 
+        //console.log("patternMismatch", validity.patternMismatch); 
+
+        if (!validity.valid) {
+            //required
+            if (validity.valueMissing) {
+                errorText = "This is a required field";
+            } else {
+                errorText = "Content of this field is not valid";
+            }
+            //validity.rangeUnderflow - Not supported
+            //validity.rangeOverflow - Not supported     
+            //validity.tooLong - Not supported
+            //validity.patternMismatch - Not supported
+        }
+        //additional validations if any
+        if (errorText === "") {
+            if (key === "justification") {
+                if (value.length > 20) {
+                    errorText = "Content of this field exceeded the allowed maximum charaters";
+                }
+            }
+        }
+        let validationFields = this.state.validationFields.slice();
+        validationFields[index][key] = errorText;
+        this.setState({ validationFields });
+        return errorText;
+    }
 
     render() { //console.log("state", this.state);
         const classes = this.props.classes;
@@ -246,20 +257,20 @@ class DynamicTable extends React.Component {
                 <form className={classes.formContainer} noValidate autoComplete="off">
                     <MySnackBarMessage snackBarConfig={this.state.snackBarConfig} action={this.handleRequestClose} />
                     <Grid container className={classes.container} direction="row" justify="flex-end">
-                        <Button variant="fab" color="primary" aria-label="add" className={classes.button}
+                        <Fab color="primary" aria-label="add" className={classes.button}
                             onClick={() => this.updateTable("add")}>
                             <Add />
-                        </Button>
-                        <Button variant="fab" color="secondary" aria-label="edit" className={classes.button}
+                        </Fab>
+                        <Fab color="secondary" aria-label="edit" className={classes.button}
                             onClick={() => this.updateTable("remove")}>
                             <Remove />
-                        </Button>
+                        </Fab>
                     </Grid>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
                                 <TableCell>ID</TableCell>
-                                <TableCell numeric>Quantity</TableCell>
+                                <TableCell align="right">Quantity</TableCell>
                                 <TableCell>Required</TableCell>
                                 <TableCell>Justification</TableCell>
                                 <TableCell>Additional Info</TableCell>
@@ -273,13 +284,13 @@ class DynamicTable extends React.Component {
                                         <TableCell>{row.id}</TableCell>
 
                                         {/*Quantity*/}
-                                        <TableCell numeric>
+                                        <TableCell align="right">
                                             <FormControl
                                                 className={classes.textField}
                                                 style={{ width: 80 }}
                                                 required
-                                                 min={1} max={9}
-                                                 pattern="[1-9]{3}"
+                                                min={1} max={9}
+                                                pattern="[1-9]{3}"
                                                 error={this.state.validationFields[row.id - 1].quantity !== ""} >
                                                 <InputLabel htmlFor={'quantity' + row.id}>Quantity</InputLabel>
                                                 <Input
@@ -299,7 +310,7 @@ class DynamicTable extends React.Component {
                                                 checked={this.state.tableData[row.id - 1].required}
                                                 onChange={(event) => this.handleSwitch(row.id, 'required', event.target, event.target.checked)}
                                                 aria-label={'required' + row.id}
-                                                />
+                                            />
                                         </TableCell>
 
                                         {/*Justification*/}
@@ -315,10 +326,10 @@ class DynamicTable extends React.Component {
                                                 margin="normal"
                                                 maxLength="2"
                                                 pattern="[A-Za-z]{3}"
-                                                disabled={!this.state.tableData[row.id - 1].required}      
+                                                disabled={!this.state.tableData[row.id - 1].required}
                                                 required={this.state.tableData[row.id - 1].required}
                                                 error={this.state.tableData[row.id - 1].required && this.state.validationFields[row.id - 1].justification !== ""}
-                                                helperText={row.justification.length + "/" + 20 + "\n\r" + this.state.validationFields[row.id - 1].justification}                                                            
+                                                helperText={row.justification.length + "/" + 20 + "\n\r" + this.state.validationFields[row.id - 1].justification}
                                             />
                                         </TableCell>
 
@@ -335,14 +346,14 @@ class DynamicTable extends React.Component {
                                                         className={classes.button}
                                                         aria-label="Menu"
                                                         onClick={() => this.handleClickDialogOpen(row.id - 1)}>
-                                                        <Menu />                                                       
+                                                        <Menu />
                                                     </IconButton>
                                                     <MyDialog DialogConfig={{
-                                                                open: row.info.open,
-                                                                index: row.id - 1,
-                                                                comments: row.info.comments,
-                                                                action: this.handleRequestDialogClose
-                                                            }}
+                                                        open: row.info.open,
+                                                        index: row.id - 1,
+                                                        comments: row.info.comments,
+                                                        action: this.handleRequestDialogClose
+                                                    }}
                                                     />
                                                 </Grid>
                                             </Grid>
@@ -353,15 +364,15 @@ class DynamicTable extends React.Component {
                         </TableBody>
                     </Table>
                     <Grid container direction="row" justify="flex-end">
-                        <Button variant="raised" color="primary" type="submit" className={classes.button} onClick={(e) => this.handleSubmit(e)} > 
+                        <Button variant="contained" color="primary" type="submit" className={classes.button} onClick={(e) => this.handleSubmit(e)} > 
                             Submit
                         </Button>
-                        <Button color="secondary" className={classes.button} onClick={() => this.props.history.push('/')}> 
-                            Cancel 
+                    <Button color="secondary" className={classes.button} onClick={() => this.props.history.push('/')}>
+                        Cancel
                         </Button>
                     </Grid>
                 </form>
-            </Paper>
+            </Paper >
         );
     }
 }

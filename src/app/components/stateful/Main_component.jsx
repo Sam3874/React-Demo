@@ -2,10 +2,10 @@
  * Root component
  */
 import React, { Component } from 'react';
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Toolbar from 'material-ui/Toolbar';
-import Paper from 'material-ui/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
+import Paper from '@material-ui/core/Paper';
 import appStyles from '../common/styles';
 
 //const styles = appStyles;
@@ -38,7 +38,7 @@ class stateless_Component extends Component {
         <Paper className={classes.root} elevation={4}>
           <h3>Parent Component</h3>
           <div> State : {this.state.value}</div>
-          <Button variant="raised" color="primary"
+          <Button variant="contained" color="primary"
             onClick={() => this.updateState("Home")}
             > Parent </Button>
           <br /> <br />

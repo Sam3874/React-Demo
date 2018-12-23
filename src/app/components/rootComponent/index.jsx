@@ -7,27 +7,31 @@ import {
     Redirect
 } from 'react-router-dom';
 import PropTypes from "prop-types";
-import { withStyles } from 'material-ui/styles';
-import { GridList, GridListTile } from 'material-ui/GridList';
-import Drawer from 'material-ui/Drawer';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Button from 'material-ui/Button';
-import { FormGroup, FormControlLabel } from 'material-ui/Form';
-import Checkbox from 'material-ui/Checkbox';
-import Divider from 'material-ui/Divider';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import { GridList, GridListTile } from '@material-ui/core/GridList';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 
-import home from '../home/home';
+import home from '../home';
 import stateful from '../stateful/Main_component';
 import stateless from '../stateless/Main_container';
 import secureComponent from '../secureComponent/secureComponent';
 import pageNotFound from '../pageNotFound/pageNotFound';
 import myAgGrid from '../agGrid/agGrid_container';
 import translation_reactIntl from '../Translation (react-intl)/sample';
-import DynamicTable from '../dynamicTable/dynamicTable';
-import Tooltip from 'material-ui/Tooltip';
+import DynamicTable from '../dynamicTable';
 import appStyles from '../common/styles';
 
 const styles = appStyles;
