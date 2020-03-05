@@ -4,7 +4,8 @@ import {
     NavLink,
     Route,
     Switch,
-    Redirect
+    Redirect,
+    withRouter
 } from 'react-router-dom';
 import PropTypes from "prop-types";
 import { withStyles } from '@material-ui/core/styles';
@@ -24,15 +25,17 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import home from '../home';
-import stateful from '../stateful/Main_component';
-import stateless from '../stateless/Main_container';
-import secureComponent from '../secureComponent/secureComponent';
-import pageNotFound from '../pageNotFound/pageNotFound';
-import myAgGrid from '../agGrid/agGrid_container';
-import translation_reactIntl from '../Translation (react-intl)/sample';
-import DynamicTable from '../dynamicTable';
 import appStyles from '../common/styles';
+import Home from '../home';
+import Stateful from '../stateful/Main_component';
+import Stateless from '../stateless/Main_container';
+import SecureComponent from '../secureComponent/secureComponent';
+import PageNotFound from '../pageNotFound/pageNotFound';
+import MyAgGrid from '../agGrid/agGrid_container';
+import Translation_reactIntl from '../Translation (react-intl)/sample';
+import DynamicTable from '../dynamicTable';
+import Login from '../login';
+
 
 const styles = appStyles;
 
@@ -42,18 +45,33 @@ export class App extends React.Component {
     }
     constructor(props, context) {
         super(props, context);
-        this.state = { open: true, secureAccessChecked: true, };
+        this.state = { open: true, secureAccessChecked: true, isAuth: true };
         const { classes } = props;
     }
 
-    componentDidMount() { }
+    componentDidMount() {
+        !this.state.isAuth && this.props.history.push("/login")
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log(this.props.history.location.pathname, this.state.isAuth);
+        if (!this.state.isAuth) {
+            if (this.props.history.location.pathname !== "/login") {
+                this.props.history.push("/login");
+            } 
+        } else if (prevState.isAuth !== this.state.isAuth) {
+            this.props.history.push("/home");
+        }
+    }
+
     updateCheck() {
-        //update local state
-        this.setState((oldState) => {
-            return Object.assign({}, oldState, {
-                secureAccessChecked: !oldState.secureAccessChecked
-            });
+        this.setState({
+            secureAccessChecked: !this.state.secureAccessChecked,
+            isAuth: !this.state.secureAccessChecked
         });
+    }
+    checkIsAuth() {
+        return this.state.isAuth;
     }
 
     render() {
@@ -81,6 +99,11 @@ export class App extends React.Component {
                             <ListItem button className={classes.listItem}>
                                 <NavLink exact to="/" className={classes.navListItem} activeClassName={classes.selectedListItem}>
                                     Home
+                            </NavLink>
+                            </ListItem>
+                            <ListItem button className={classes.listItem}>
+                                <NavLink exact to="/login" className={classes.navListItem} activeClassName={classes.selectedListItem}>
+                                    Login
                             </NavLink>
                             </ListItem>
                             <ListItem button className={classes.listItem}>
@@ -123,24 +146,25 @@ export class App extends React.Component {
                                             checked={this.state.secureAccessChecked}
                                             onChange={this.updateCheck.bind(this)}
                                             value="secureAccessChecked"
-                                            />
+                                        />
                                     }
                                     label="Allow Secure Access"
-                                    />
+                                />
                             </FormGroup>
                         </Tooltip>
                     </Drawer>
                     <main className={classes.content}>
                         <Switch>
-                            <Route exact path="/" component={home} />
-                            <Route exact path="/home" component={home} />
-                            <Route exact path="/stateful" component={stateful} />
-                            <Route exact path="/stateless" component={stateless} />
-                            <Route exact path="/myAgGrid" component={myAgGrid} />
+                            <Route exact path="/" component={Home} />
+                            <Route exact path="/home" component={Home} />
+                            <Route exact path="/login" component={Login} />
+                            <Route exact path="/stateful" component={Stateful} />
+                            <Route exact path="/stateless" component={Stateless} />
+                            <Route exact path="/myAgGrid" component={MyAgGrid} />
                             <Route exact path="/dynamicTable" component={DynamicTable} />
-                            <Route exact path="/translation" component={translation_reactIntl} />
-                            <PrivateRoute exact path="/secureComponent" component={secureComponent} secureAccessChecked={this.state.secureAccessChecked} />
-                            <Route component={pageNotFound} />
+                            <Route exact path="/translation" component={Translation_reactIntl} />
+                            <PrivateRoute exact path="/secureComponent" component={SecureComponent} secureAccessChecked={this.state.secureAccessChecked} />
+                            <Route component={PageNotFound} />
                         </Switch>
                     </main>
                 </div>
@@ -150,19 +174,18 @@ export class App extends React.Component {
             </div>
         );
     }
-
-    componentDidMount() { }
 }
 
-export const PrivateRoute = ({component: Component, ...rest}) => {
+export const PrivateRoute = ({ component: Component, ...rest }) => {
     return (
         <Route
             {...rest}
             render={(props) => rest.secureAccessChecked === true
                 ? <Component {...props} />
                 : <Redirect to={{ pathname: '/notAllowed', state: { from: props.location } }} />}
-            />
+        />
     )
 };
 
-export default withStyles(styles)(App);
+const styledApp = withStyles(styles)(App);
+export default withRouter(styledApp);

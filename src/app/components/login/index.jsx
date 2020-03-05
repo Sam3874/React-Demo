@@ -11,16 +11,16 @@ const styles = theme => ({
   }),
 });
 
-const Home = (props) => {
+const Login = (props) => {
   const { classes } = props;
   return (
     <div>
       <Paper className={classes.root} elevation={4}>
         <Typography variant="headline" component="h3">
-          Home Component
+          Login Component
         </Typography>
         <Typography type="body1" component="p">
-          This is a default loaded component of application..
+          This is a loaded if not authenticated!
         </Typography>
          <br /><br />
       </Paper>
@@ -28,8 +28,8 @@ const Home = (props) => {
   );
 }
 
-Home.propTypes = {
+Login.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Login);
