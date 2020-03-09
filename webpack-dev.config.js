@@ -19,12 +19,14 @@ const config = {
     inline: true,
     port: 3000, // Port Number
     host: 'localhost', // Change to '0.0.0.0' for external facing server
+    historyApiFallback: true,
   },
   devtool: 'eval',
   /*devtool: 'eval',*/
   output: {
     path: path.resolve(__dirname, 'build'), // Path of output file
     filename: 'index.jsx',
+    publicPath: '/'
   },
   plugins: [
     // Enables Hot Modules Replacement

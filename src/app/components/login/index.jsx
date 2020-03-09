@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import { Link } from 'react-router-dom';
+
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -15,15 +17,17 @@ const Login = (props) => {
   const { classes } = props;
   return (
     <div>
+      <center>
       <Paper className={classes.root} elevation={4}>
         <Typography variant="headline" component="h3">
-          Login Component
+          You are not Logged in!
         </Typography>
         <Typography type="body1" component="p">
-          This is a loaded if not authenticated!
+          Click <Link to="/">here</Link> to Login..
         </Typography>
-         <br /><br />
+        <br /><br />
       </Paper>
+      </center>
     </div>
   );
 }

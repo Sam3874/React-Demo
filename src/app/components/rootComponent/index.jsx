@@ -24,6 +24,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
+import Keycloak from 'keycloak-js';
 
 import appStyles from '../common/styles';
 import Home from '../home';
@@ -40,38 +41,57 @@ import Login from '../login';
 const styles = appStyles;
 
 export class App extends React.Component {
+    keycloak;
     static contextTypes = {
         router: PropTypes.object
     }
     constructor(props, context) {
         super(props, context);
-        this.state = { open: true, secureAccessChecked: true, isAuth: true };
-        const { classes } = props;
+        this.state = { open: true, secureAccessChecked: true, isAuthenticated: false, keycloak: null };
+    }
+
+    handleAuth() {
+        this.keycloak = Keycloak({
+            realm: "demorealm",
+            url: "http://localhost:8080/auth",
+            clientId: "demo-client"
+        });
+        this.keycloak.init({ onLoad: 'login-required', promiseType: 'native' })
+            .then(authenticated => {
+                this.setState({ isAuthenticated: authenticated });
+                this.keycloak.onTokenExpired = () => this.setState({ isAuthenticated: false });
+                this.keycloak.onAuthLogout = () => this.setState({ isAuthenticated: false });
+            })
+            .catch(function () {
+                console.log('failed to initialize');
+                this.setState({ isAuthenticated: false });
+                //redirect to public page with login link
+            });
     }
 
     componentDidMount() {
-        !this.state.isAuth && this.props.history.push("/login")
+        if (this.props.history.location.pathname !== '/login') {
+            this.handleAuth();
+        }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        console.log(this.props.history.location.pathname, this.state.isAuth);
-        if (!this.state.isAuth) {
-            if (this.props.history.location.pathname !== "/login") {
-                this.props.history.push("/login");
-            } 
-        } else if (prevState.isAuth !== this.state.isAuth) {
-            this.props.history.push("/home");
+    componentDidUpdate() {
+        if (!this.state.isAuthenticated && (this.props.history.location.pathname !== '/login')) {
+            this.handleAuth();
         }
     }
 
     updateCheck() {
         this.setState({
             secureAccessChecked: !this.state.secureAccessChecked,
-            isAuth: !this.state.secureAccessChecked
+            isAuthenticated: !this.state.secureAccessChecked
         });
     }
-    checkIsAuth() {
-        return this.state.isAuth;
+    
+    handleLogout() {
+        this.setState({ isAuthenticated: false });
+        this.props.history.push('/login');
+        this.keycloak.logout();
     }
 
     render() {
@@ -82,77 +102,82 @@ export class App extends React.Component {
                     <AppBar className={classes.appBar}>
                         <Toolbar>
                             <Typography variant="title" color="inherit" noWrap>
-                                React, Router, Conditional routing, Redux, Material-ui-next, Form validation, Dynamic table, React-intl, ag-Grid
+                                React, Router, Conditional routing, Auth Guard, Redux, Material-ui-next, Form validation, Dynamic table, React-intl, ag-Grid
                             </Typography>
                         </Toolbar>
                     </AppBar>
-                    <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
-                        <div className={classes.drawerHeader}>
-                            <Toolbar>
-                                <Typography variant="title" color="inherit" noWrap>
-                                    {'React Demo'}
-                                </Typography>
-                            </Toolbar>
-                        </div>
-                        <Divider />
-                        <List className={classes.list}>
-                            <ListItem button className={classes.listItem}>
-                                <NavLink exact to="/" className={classes.navListItem} activeClassName={classes.selectedListItem}>
-                                    Home
+                    {this.state.isAuthenticated &&
+                        <Drawer variant="permanent" classes={{ paper: classes.drawerPaper }}>
+                            <div className={classes.drawerHeader}>
+                                <Toolbar>
+                                    <Typography variant="title" color="inherit" noWrap>
+                                        {'React Demo'}
+                                    </Typography>
+                                </Toolbar>
+                            </div>
+                            <Divider />
+                            <List className={classes.list}>
+                                <ListItem button className={classes.listItem}>
+                                    <NavLink exact to="/" className={classes.navListItem} activeClassName={classes.selectedListItem}>
+                                        Home
                             </NavLink>
-                            </ListItem>
-                            <ListItem button className={classes.listItem}>
+                                </ListItem>
+                                {/* <ListItem button className={classes.listItem}>
                                 <NavLink exact to="/login" className={classes.navListItem} activeClassName={classes.selectedListItem}>
                                     Login
                             </NavLink>
-                            </ListItem>
-                            <ListItem button className={classes.listItem}>
-                                <NavLink exact to="/stateful" className={classes.navListItem} activeClassName={classes.selectedListItem}>
-                                    Local State
+                            </ListItem> */}
+                                <ListItem button className={classes.listItem}>
+                                    <NavLink exact to="/stateful" className={classes.navListItem} activeClassName={classes.selectedListItem}>
+                                        Local State
                             </NavLink>
-                            </ListItem>
-                            <ListItem button className={classes.listItem}>
-                                <NavLink exact to="/stateless" className={classes.navListItem} activeClassName={classes.selectedListItem}>
-                                    Redux State
+                                </ListItem>
+                                <ListItem button className={classes.listItem}>
+                                    <NavLink exact to="/stateless" className={classes.navListItem} activeClassName={classes.selectedListItem}>
+                                        Redux State
                             </NavLink>
-                            </ListItem>
-                            <ListItem button className={classes.listItem}>
-                                <NavLink exact to="/myAgGrid" className={classes.navListItem} activeClassName={classes.selectedListItem}>
-                                    ag-Grid
+                                </ListItem>
+                                <ListItem button className={classes.listItem}>
+                                    <NavLink exact to="/myAgGrid" className={classes.navListItem} activeClassName={classes.selectedListItem}>
+                                        ag-Grid
                             </NavLink>
-                            </ListItem>
-                            <ListItem button className={classes.listItem}>
-                                <NavLink exact to="/dynamicTable" className={classes.navListItem} activeClassName={classes.selectedListItem}>
-                                    Dynamic Table
+                                </ListItem>
+                                <ListItem button className={classes.listItem}>
+                                    <NavLink exact to="/dynamicTable" className={classes.navListItem} activeClassName={classes.selectedListItem}>
+                                        Dynamic Table
                             </NavLink>
-                            </ListItem>
-                            <ListItem button className={classes.listItem}>
-                                <NavLink exact to="/translation" className={classes.navListItem} activeClassName={classes.selectedListItem}>
-                                    Translation (react-intl)
+                                </ListItem>
+                                <ListItem button className={classes.listItem}>
+                                    <NavLink exact to="/translation" className={classes.navListItem} activeClassName={classes.selectedListItem}>
+                                        Translation (react-intl)
                             </NavLink>
-                            </ListItem>
-                            <ListItem button className={classes.listItem}>
-                                <NavLink exact to="/secureComponent" className={classes.navListItem} activeClassName={classes.selectedListItem}>
-                                    Secure Routing
+                                </ListItem>
+                                <ListItem button className={classes.listItem}>
+                                    <NavLink exact to="/secureComponent" className={classes.navListItem} activeClassName={classes.selectedListItem}>
+                                        Secure Routing
                             </NavLink>
-                            </ListItem>
-                        </List>
-                        <Divider />
-                        <Tooltip id="tooltip-Checkbox" title="Checking this allows accessing 'Secure Routing'">
-                            <FormGroup row>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={this.state.secureAccessChecked}
-                                            onChange={this.updateCheck.bind(this)}
-                                            value="secureAccessChecked"
-                                        />
-                                    }
-                                    label="Allow Secure Access"
-                                />
-                            </FormGroup>
-                        </Tooltip>
-                    </Drawer>
+                                </ListItem>
+                            </List>
+                            <Divider />
+                            {<Tooltip id="tooltip-Checkbox" title="Checking this allows accessing 'Secure Routing'">
+                                <FormGroup row>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.secureAccessChecked}
+                                                onChange={this.updateCheck.bind(this)}
+                                                value="secureAccessChecked"
+                                            />
+                                        }
+                                        label="Allow Secure Access"
+                                    />
+                                </FormGroup>
+                            </Tooltip>}
+                            <Divider />
+                            <Button variant="contained" color="secondary" onClick={this.handleLogout.bind(this)}>
+                                Logout
+                        </Button>
+                        </Drawer>}
                     <main className={classes.content}>
                         <Switch>
                             <Route exact path="/" component={Home} />
