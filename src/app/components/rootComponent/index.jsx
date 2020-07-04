@@ -51,7 +51,7 @@ export class App extends React.Component {
     }
 
     handleAuth() {
-        this.keycloak = Keycloak({
+        /* this.keycloak = Keycloak({
             realm: "demorealm",
             url: "http://localhost:8080/auth",
             clientId: "demo-client"
@@ -66,7 +66,8 @@ export class App extends React.Component {
                 console.log('failed to initialize');
                 this.setState({ isAuthenticated: false });
                 //redirect to public page with login link
-            });
+            }); */
+        this.setState({ isAuthenticated: true });
     }
 
     componentDidMount() {
@@ -87,11 +88,11 @@ export class App extends React.Component {
             isAuthenticated: !this.state.secureAccessChecked
         });
     }
-    
+
     handleLogout() {
         this.setState({ isAuthenticated: false });
         this.props.history.push('/login');
-        this.keycloak.logout();
+        //this.keycloak.logout();
     }
 
     render() {
